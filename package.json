@@ -1,0 +1,20 @@
+{
+  "name": "forum_api_v1",
+  "version": "1.0.0",
+  "description": "A question-answer website",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Shubham Saurav",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.10.7",
+    "morgan": "^1.10.0",
+    "slugify": "^1.4.5"
+  }
+}
