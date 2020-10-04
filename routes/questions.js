@@ -9,7 +9,7 @@ router
   .get(questionController.getQuestions)
   .post(questionController.createQuestion);
 
-route
+router
   .route('/:id')
   .get(questionController.getQuestion)
   .put(questionController.updateQuestion)

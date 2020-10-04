@@ -17,7 +17,7 @@ const QuestionSchema = mongoose.Schema({
   slug: String,
   createdAt: {
     type: Date,
-    default: new Date.now(),
+    default: Date.now(),
   },
 });
 
