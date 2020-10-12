@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { nextTick } = require('process');
 const slugify = require('slugify');
 
 const QuestionSchema = mongoose.Schema({
