@@ -8,9 +8,10 @@ const AnswerSchema = mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
-    answerId: {
+    questionId: {
         type: mongoose.Schema.ObjectId,
         ref: 'Question',
+        required: [true, "Please add a question Id"]
     }
 });
 
