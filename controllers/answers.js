@@ -4,15 +4,20 @@ const APIFeatures = require('../utils/apiFeatures');
 const Question = require('../models/Question');
 const Answer = require('../models/Answer');
 
-// @route       : GET /api/v1/blogs/:id
-// @desc        : Get a blog
+// @route       : GET /api/v1/question/:questionId/answers
+// @desc        : Get Answers using questionId
 // @access      : Public
-exports.getAnswers = catchAsync (async (req, res, next) => {
-    
+exports.getAnswersByQuestion = catchAsync (async (req, res, next) => {
+    const answers = await Answer.find({questionId: req.params.questionId});
+    res.status(200).json({
+        success: true,
+        count: answers.length,
+        data: answers,
+    })
 });
 
 // @route       : GET /api/v1/answers/:id
-// @desc        : Get a blog
+// @desc        : Get a Answer
 // @access      : Public
 exports.getAnswer = async (req, res, next) => {
     const answer = await Answer.findById(req.params.id);
@@ -29,17 +34,44 @@ exports.getAnswer = async (req, res, next) => {
     });
 };
 
-// @route       : GET /api/v1/blogs/:id
-// @desc        : Get a blog
-// @access      : Public
-exports.createAnswer = async (req, res, next) => {};
+// @route       : POST /api/v1/answers
+// @desc        : Create An Answer
+// @access      : Private
+exports.createAnswer = async (req, res, next) => {
+    const answer = await Answer.create(req.body);
+    res.status(200).json({
+        success: answer,
+        data: answer
+    });
+};
 
-// @route       : GET /api/v1/blogs/:id
-// @desc        : Get a blog
-// @access      : Public
-exports.updateAnswer = async (req, res, next) => {};
+// @route       : PUT /api/v1/answers/:id
+// @desc        : Update an answer
+// @access      : Private
+exports.updateAnswer = async (req, res, next) => {
+    const answer = await Answer.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
+    if (!answer) {
+        return next(new AppError(`Answer not found with the id of ${req.params.id}`, 404));
+    }
+    res.status(200).json({
+        success: true,
+        data: answer,
+    })
+};
 
-// @route       : GET /api/v1/blogs/:id
-// @desc        : Get a blog
-// @access      : Public
-exports.deleteAnswer = async (req, res, next) => {};
+// @route       : DELETE /api/v1/answers/:id
+// @desc        : Delete an answer
+// @access      : Private
+exports.deleteAnswer = async (req, res, next) => {
+    const answer = await Answer.findByIdAndDelete(req.params.id);
+    if (!answer) {
+        return next(new AppError(`Answer not found with the id of ${req.params.id}`, 404));
+    }
+    res.status(200).json({
+        success: true, 
+        data: {},
+    })
+};
