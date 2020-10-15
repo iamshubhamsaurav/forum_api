@@ -1,87 +1,62 @@
 const Question = require('../models/Question');
+const Answer = require('../models/Answer');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/AppError');
 
 // @route:       GET /api/v1/questions/
 // @desc:        Get all question.
 // @access:      Public
-exports.getQuestions = async (req, res, next) => {
-  try {
+exports.getQuestions = catchAsync( async (req, res, next) => {
     const questions = await Question.find();
     res
       .status(200)
       .json({ success: true, count: questions.length, data: questions });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message, error });
-  }
-};
+});
 
 // @route:       GET /api/v1/questions/:id
 // @desc:        Get a question.
 // @access:      Public
-exports.getQuestion = async (req, res, next) => {
-  try {
+exports.getQuestion = catchAsync( async (req, res, next) => {
     const question = await Question.findById(req.params.id);
     if (!question) {
-      res.status(404).json({
-        success: false,
-        message: '404NotFound',
-        error: `Question with that id ${req.params.id} found`,
-      });
+      return next(new AppError(`No Question found with id ${req.params.id}`, 404));
     }
-    res.status(200).json({ success: true, data: question });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message, error });
-  }
-};
+    const answers = await Answers.find({questionId: req.params.id});
+    res.status(200).json({ success: true, data: {
+      question,
+      answers
+    } });
+});
 
 // @route:       POST /api/v1/questions/
 // @desc:        Create a question.
 // @access:      Private
-exports.createQuestion = async (req, res, next) => {
-  try {
+exports.createQuestion = catchAsync( async (req, res, next) => {
     const question = await Question.create(req.body);
     res.status(201).json({ success: true, data: question });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message, error });
-  }
-};
+});
 
 // @route:       PUT /api/v1/questions/:id
 // @desc:        Update a question.
 // @access:      Private
-exports.updateQuestion = async (req, res, next) => {
-  try {
+exports.updateQuestion = catchAsync( async (req, res, next) => {
     const question = await Question.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
     if (!question) {
-      res.status(400).json({
-        success: false,
-        message: '404NotFound',
-        error: `Question not found with the id of ${req.params.id}`,
-      });
+      return next(new AppError(`No Question found with id ${req.params.id}`, 404));
     }
     res.status(200).json({ success: true, data: question });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message, error });
-  }
-};
+});
 
 // @route:       DELETE /api/v1/questions/:id
 // @desc:        Delete a question.
 // @access:      Private
-exports.deleteQuestion = async (req, res, next) => {
-  try {
+exports.deleteQuestion = catchAsync( async (req, res, next) => {
     const question = await Question.findByIdAndDelete(req.params.id);
     if (!question) {
-      res.status(200).json({
-        success: false,
-        message: '404NotFound',
-        error: `Question not found with the id: ${req.params.id}`,
-      });
+      return next(new AppError(`No Question found with id ${req.params.id}`, 404));
     }
     res.status(200).json({ success: true, data: {} });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message, error });
-  }
-};
+});
