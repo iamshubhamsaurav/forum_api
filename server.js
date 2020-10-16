@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 
+const AppError = require('./utils/apiError');
 const errorHandler = require('./utils/errorHandler');
 
 const connectDB = require('./config/db');
@@ -21,12 +22,8 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/v1/questions', questionRoute);
 app.use('/api/v1/answers', answerRoute);
 
-app.all('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: '404NotFound',
-    error: 'Resource does not exists.',
-  });
+app.all('*', (req, res, next) => {
+  return next(new AppError(`Resource ${req.originalUrl} not found on the server`, 404));
 });
 
 app.use(errorHandler);
