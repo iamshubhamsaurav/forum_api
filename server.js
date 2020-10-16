@@ -8,6 +8,7 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 const questionRoute = require('./routes/questions');
+const answerRoute = require('./routes/answers');
 
 const app = express();
 
@@ -16,6 +17,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use('/api/v1/questions', questionRoute);
+app.use('/api/v1/answers', answerRoute);
 
 app.all('*', (req, res) => {
   res.status(404).json({
