@@ -1,7 +1,7 @@
 const Question = require('../models/Question');
 const Answer = require('../models/Answer');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/apiError');
 const APIFeatures = require('../utils/apiFeatures');
 
 // @route:       GET /api/v1/questions/

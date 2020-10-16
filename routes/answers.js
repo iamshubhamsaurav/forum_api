@@ -5,7 +5,7 @@ const answerController = require('../controllers/answers');
 const router = express.Router();
 
 router.route('/')
-    .get(answerController.getAnswers)
+    .get(answerController.getAnswersByQuestion)
     .post(answerController.createAnswer);
 
 router.route('/:id')
