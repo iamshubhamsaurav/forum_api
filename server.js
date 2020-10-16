@@ -2,6 +2,8 @@ const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 
+const errorHandler = require('./utils/errorHandler');
+
 const connectDB = require('./config/db');
 
 dotenv.config({ path: './config/config.env' });
@@ -26,6 +28,8 @@ app.all('*', (req, res) => {
     error: 'Resource does not exists.',
   });
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log('Listening to server on port ' + PORT));
