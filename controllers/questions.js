@@ -2,12 +2,14 @@ const Question = require('../models/Question');
 const Answer = require('../models/Answer');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const APIFeatures = require('../utils/apiFeatures');
 
 // @route:       GET /api/v1/questions/
 // @desc:        Get all question.
 // @access:      Public
 exports.getQuestions = catchAsync( async (req, res, next) => {
-    const questions = await Question.find();
+  const features = new APIFeatures(Question.find(), req.query).filter().sort().limitFields().paginate();
+  const questions = await features.query;
     res
       .status(200)
       .json({ success: true, count: questions.length, data: questions });
