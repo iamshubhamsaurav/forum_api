@@ -8,7 +8,8 @@ const APIFeatures = require('../utils/apiFeatures');
 // @desc:        Get all question.
 // @access:      Public
 exports.getQuestions = catchAsync( async (req, res, next) => {
-  const features = new APIFeatures(Question.find(), req.query).filter().sort().limitFields().paginate();
+  const features = new APIFeatures(Question.find(), req.query).sort().filter().limitField().paginate();
+
   const questions = await features.query;
     res
       .status(200)

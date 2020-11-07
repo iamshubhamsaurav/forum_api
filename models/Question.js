@@ -22,7 +22,6 @@ const QuestionSchema = mongoose.Schema({
 
 QuestionSchema.pre('save', function () {
   this.slug = slugify(this.title, { lowercase: true });
-  next();
 });
 
 const Question = mongoose.model('Question', QuestionSchema);
