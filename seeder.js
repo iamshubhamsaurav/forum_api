@@ -21,7 +21,7 @@ const questions = JSON.parse(fs.readFileSync(`./_data/questions.json`, 'utf-8'))
 const showQuestion = async () => {
     try{
         const questions = await Question.find();
-        console.log(questions);
+        console.log(JSON.stringify(questions));
     } catch(err) {
         console.log(err);
     }
@@ -31,14 +31,27 @@ const showQuestion = async () => {
 const importQuestions = async () => {
     try {
         await Question.create(questions);
+        console.log("Successfully Imported Questions".green.inverse);
     } catch (err) {
         console.log(err);
+        console.log("Error Importing Questions".red.inverse);
     }
+    process.exit();
+}
 
+const destroyQuestions = async () => {
+    try {
+        await Question.deleteMany();
+        console.log("Successfully Deleted Questions".green.inverse);
+    } catch (err) {
+        console.log('Error Destroying Questions'.red.inverse);
+    }
 }
 
 if (process.argv[2] === '-sq') {
     showQuestion();
 } else if (process.argv[2] === '-iq') {
     importQuestions();
+} else if (process.argv[2] === '-dq') {
+    destroyQuestions();
 }
