@@ -16,6 +16,8 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
 });
 
+const questions = JSON.parse(fs.readFileSync(`./_data/questions.json`, 'utf-8'));
+
 const showQuestion = async () => {
     try{
         const questions = await Question.find();
@@ -23,8 +25,20 @@ const showQuestion = async () => {
     } catch(err) {
         console.log(err);
     }
+    process.exit();
+}
+
+const importQuestions = async () => {
+    try {
+        await Question.create(questions);
+    } catch (err) {
+        console.log(err);
+    }
+
 }
 
 if (process.argv[2] === '-sq') {
     showQuestion();
+} else if (process.argv[2] === '-iq') {
+    importQuestions();
 }
