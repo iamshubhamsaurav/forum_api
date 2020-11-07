@@ -34,9 +34,9 @@ exports.getQuestion = catchAsync( async (req, res, next) => {
 // @route:       POST /api/v1/questions/
 // @desc:        Create a question.
 // @access:      Private
-exports.createQuestion = catchAsync( async (req, res, next) => {
-    const question = await Question.create(req.body);
-    res.status(201).json({ success: true, data: question });
+exports.createQuestion = catchAsync(async (req, res, next) => {
+  const question = await Question.create(req.body);
+  res.status(201).json({ success: true, data: question });
 });
 
 // @route:       PUT /api/v1/questions/:id
