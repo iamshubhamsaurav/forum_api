@@ -9,7 +9,7 @@ const Answer = require('./models/Answer');
 
 dotenv.config({path: './config/config.env'});
 
-mongoose.connect(process.env.MONDO_URL, {
+mongoose.connect(process.env.MONGO_URL, {
     useCreateIndex: true,
     useFindAndModify: false,
     useUnifiedTopology: true,
