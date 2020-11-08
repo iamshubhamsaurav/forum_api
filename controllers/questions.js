@@ -24,7 +24,7 @@ exports.getQuestion = catchAsync( async (req, res, next) => {
     if (!question) {
       return next(new AppError(`No Question found with id ${req.params.id}`, 404));
     }
-    const answers = await Answers.find({questionId: req.params.id});
+    const answers = await Answer.find({questionId: req.params.id});
     res.status(200).json({ success: true, data: {
       question,
       answers
