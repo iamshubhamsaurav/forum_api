@@ -12,6 +12,7 @@ connectDB();
 
 const questionRoute = require('./routes/questions');
 const answerRoute = require('./routes/answers');
+const userRoute = require('./routes/users');
 
 const app = express();
 
@@ -23,6 +24,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use('/api/v1/questions', questionRoute);
 app.use('/api/v1/answers', answerRoute);
+app.use('/api/v1/users', userRoute);
 
 app.all('*', (req, res, next) => {
   return next(new AppError(`Resource ${req.originalUrl} not found on the server`, 404));
