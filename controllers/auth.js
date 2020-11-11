@@ -43,7 +43,7 @@ exports.login = catchAsync(async (req, res, next) => {
         // 401 stands for not authenticated
         return next(new AppError(`Incorrect Email or Password`, 401));
     }
-    // If elerything Ok send back the jsonwebtoken
+    // If everything Ok send back the jsonwebtoken
     const token  = signToken(user._id); // Signing the token
 
     res.status(200).json({

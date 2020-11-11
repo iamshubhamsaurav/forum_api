@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 // Models
 const Question = require('./models/Question');
 const Answer = require('./models/Answer');
+const User = require('./models/User');
 
 dotenv.config({path: './config/config.env'});
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 const questions = JSON.parse(fs.readFileSync(`./_data/questions.json`, 'utf-8'));
 const answers = JSON.parse(fs.readFileSync(`./_data/answers.json`, 'utf-8'));
+const users = JSON.parse(fs.readFileSync(`./_data/users.json`, 'utf-8'));
 
 const showQuestion = async () => {
     try{
@@ -63,7 +65,7 @@ const showAnswers = async () => {
 const importAnswers = async () => {
     try {
         await Answer.create(answers);
-        console.log("Successfully Importing Answers".green.inverse);
+        console.log("Successfully Imported Answers".green.inverse);
     } catch (err) {
         console.log('Error Importing Answers'.red.inverse);
     }
@@ -80,6 +82,36 @@ const destroyAnswers = async () => {
     process.exit();
 }
 
+const showUsers = async () => {
+    try {
+        const users = await User.find();
+        console.log(users);
+    } catch (err) {
+        console.log('Error Showing Users'.red.inverse);
+    }
+    process.exit();
+}
+
+const importUsers = async () => {
+    try {
+        await User.create(users);
+        console.log('Successfully Imported Users'.green.inverse);
+    } catch (err) {
+        console.log('Error Importing Users'.red.inverse);
+    }
+    process.exit();
+}
+
+const destroyUsers = async () => {
+    try {
+        await User.deleteMany();
+        console.log('Successfully Destroyed Users'.green.inverse);
+    } catch (err) {
+        console.log('Error Destroying Users'.red.inverse);
+    }
+    process.exit();
+}
+
 if (process.argv[2] === '-sq') {
     showQuestion();
 } else if (process.argv[2] === '-iq') {
@@ -92,4 +124,10 @@ if (process.argv[2] === '-sq') {
     importAnswers();
 } else if (process.argv[2] === '-da') {
     destroyAnswers();
+} else if (process.argv[2] === '-su') {
+    showUsers();
+} else if (process.argv[2] === '-iu') {
+    importUsers();
+} else if (process.argv[2] === '-du') {
+    destroyUsers();
 }
