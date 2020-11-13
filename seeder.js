@@ -98,6 +98,7 @@ const importUsers = async () => {
         console.log('Successfully Imported Users'.green.inverse);
     } catch (err) {
         console.log('Error Importing Users'.red.inverse);
+        console.log(err);
     }
     process.exit();
 }

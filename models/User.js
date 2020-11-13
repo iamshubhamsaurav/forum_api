@@ -28,11 +28,12 @@ const UserSchema = mongoose.Schema({
         validate: {
             // This only works for onCreate or onSave. Will not work for update
             validator: function(el) {
-                return this.el === this.password;
+                return el === this.password;
             },
             message: "Passwords are not the same!"
         }
-    }
+    },
+    passwordChangedAt: Date,
 });
 
 UserSchema.pre('save', async function(next) {
@@ -50,6 +51,17 @@ UserSchema.pre('save', async function(next) {
 UserSchema.methods.correctPassword = async function(candiatePassword, userPassword) {
     // this.password will not work cause select: false
     return await bcrypt.compare(candiatePassword, userPassword);
+}
+
+UserSchema.methods.changedPasswordAfter = function(JWTTimeStamp) {
+    if (this.passwordChangedAt) {
+        
+        const changedTimestamp = parseInt( this.passwordChangedAt.getTime() / 1000, 10);
+    // console.log(changedTimestamp, JWTTimeStamp);
+    return  JWTTimeStamp < changedTimestamp;
+    // Checking if the passwordChangedAt is greater than the iat of incoming token 
+    }
+    return false;
 }
 
 const User = mongoose.model('User', UserSchema);
