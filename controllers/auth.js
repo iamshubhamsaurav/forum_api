@@ -142,7 +142,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
     await user.save();
     // update changedPasswordAt property
-
+    // Done by writing a pre middleware in UserSchema
     
     // Log the user in, Send JWT
     const token = signToken(user._id);
