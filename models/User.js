@@ -56,6 +56,15 @@ UserSchema.pre('save', async function(next) {
     next();
 })
 
+UserSchema.pre('save', function (next){
+    if (!this.isModified('password') || this.isNew) {
+        return next();
+    }
+    // Subtract 1 sec here, cause sometime passwordChangedAt will be saved to DB a bit after the token has been issued and the user will not be able to log in cuz again the passwordChangedAt is set a sec after the token has been issued
+    this.passwordChangedAt = Date.now() - 1000;
+    next();
+});
+
 UserSchema.methods.correctPassword = async function(candiatePassword, userPassword) {
     // this.password will not work cause select: false
     return await bcrypt.compare(candiatePassword, userPassword);
