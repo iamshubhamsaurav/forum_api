@@ -12,6 +12,15 @@ const signToken = id => {
     })
 }
 
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user._id);
+    res.status(statusCode).json({
+        success: true,
+        token,
+        data: user,
+    });
+}
+
 exports.signup = catchAsync(async (req, res, next) => {
     const user = await User.create({
         name: req.body.name,
@@ -24,13 +33,14 @@ exports.signup = catchAsync(async (req, res, next) => {
     //     expiresIn: process.env.JWT_EXPIRES_IN,
     // });
 
-    const token = signToken(user._id);
+    // const token = signToken(user._id);
 
-    res.status(200).json({
-        success: true,
-        data: user,
-        token: token,
-    })
+    // res.status(200).json({
+    //     success: true,
+    //     data: user,
+    //     token: token,
+    // })
+    createSendToken(user, 201, res);
 })
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -153,11 +163,11 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-    const {password, newPassword, newPasswordConfirm} = req.body;
+    const {currentPassword, newPassword, newPasswordConfirm} = req.body;
     // Get user from the database
     const user  = await User.findById(req.user._id).select('+password');
     // Check if the password is correct
-    if (!user.correctPassword(password, user.password)) {
+    if (!user.correctPassword(currentPassword, user.password)) {
         return next(new AppError(`password is incorrect!`, 401));
     }
     // update the password

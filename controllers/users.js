@@ -56,3 +56,23 @@ exports.deleteUser = catchAsync(async (req, res, next) =>  {
     await user.remove();
     res.status(204).send({success: true, data: {}});
 });
+
+
+exports.updateDetails = catchAsync(async (req, res, next) => {
+    if (req.body.password || req.body.passwordConfirm) {
+        return next(new AppError(`This route is not for password updates`, 400));
+    }
+    const {name, email} = req.body;
+    // Update user document
+    const user = await User.findById(req.user._id);
+    
+    user.name = name;
+    user.email = email;
+    
+    await user.save({validateBeforeSave: false});
+    // Send a response
+    res.status(200).json({
+        success: true,
+        data: user
+    });
+});
