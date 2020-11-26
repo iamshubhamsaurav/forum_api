@@ -49,6 +49,14 @@ const UserSchema = mongoose.Schema({
     passwordResetTokenExpiresIn: Date,
 });
 
+// /^find/ :  It means that every query that starts with find
+UserSchema.pre(/^find/, function (next) {
+    // This points to the current query
+    // {$ne: false}: It means not equal to false
+    this.find({active: {$ne: false}});
+    next();
+});
+
 UserSchema.pre('save', async function(next) {
     // Only hash the password if the password was modified
     if (!this.isModified('password')) {
