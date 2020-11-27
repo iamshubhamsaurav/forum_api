@@ -39,6 +39,22 @@ const UserSchema = mongoose.Schema({
         enum: ['user', 'moderator', 'admin'],
         default: 'user',
     },
+    course: {
+        type: String,
+        required: [true, "Please add your course"]
+    },
+    college: {
+        type: String,
+        required: [true, "Please add your college"]
+    },
+    favoriteSubject: {
+        type: String,
+        required: [true, "Please add your favorite subject"],
+    },
+    semester: {
+        type: String,
+        default: "1",
+    },
     active: {
         type: Boolean,
         default: true,
