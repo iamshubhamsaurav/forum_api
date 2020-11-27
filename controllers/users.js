@@ -26,36 +26,36 @@ exports.getUser = catchAsync(async (req, res, next) =>  {
     });
 });
 
-// exports.createUser = catchAsync(async (req, res, next) =>  {
-//     const user = await User.create(req.body);
-//     res.status(200).send({
-//         success: true, 
-//         data: user,
-//     })
-// });
+exports.createUser = catchAsync(async (req, res, next) =>  {
+    const user = await User.create(req.body);
+    res.status(200).send({
+        success: true, 
+        data: user,
+    })
+});
 
-// exports.updateUser = catchAsync(async (req, res, next) =>  {
-//     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-//         new: true,
-//         runValidators: true,
-//     });
-//     if (!user) {
-//         return next(new AppError(`No USE found with id ${req.params.id}`, 404));
-//     }
-//     res.status(200).json({
-//         success: true,
-//         data: user,
-//     });
-// });
+exports.updateUser = catchAsync(async (req, res, next) =>  {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
+    if (!user) {
+        return next(new AppError(`No USE found with id ${req.params.id}`, 404));
+    }
+    res.status(200).json({
+        success: true,
+        data: user,
+    });
+});
 
-// exports.deleteUser = catchAsync(async (req, res, next) =>  {
-//     const user = await User.findById(req.params.id);
-//     if (!user) {
-//         return next(new AppError(`No User found with id ${req.params.id}`, 404));
-//     }
-//     await user.remove();
-//     res.status(204).send({success: true, data: {}});
-// });
+exports.deleteUser = catchAsync(async (req, res, next) =>  {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+        return next(new AppError(`No User found with id ${req.params.id}`, 404));
+    }
+    await user.remove();
+    res.status(204).send({success: true, data: {}});
+});
 
 
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -78,7 +78,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 exports.deleteMe = catchAsync(async (req, res, next) =>  {
     //TODO: Implement a password check here... 
-    const user = await User.findByIdAndUpdate(req.user._id, {active: false});
+    const password = req.body.password;
+    let user = await User.findById(req.user._id).select('+password');
+
+    if (!user.correctPassword(password, user.password)) {
+        return next(new AppError('Your password is incorrect!', 401));
+    }
+
+    user = await User.findByIdAndUpdate(req.user._id, {active: false});
+
     res.status(204).json({
         success: true, 
         data: null,
