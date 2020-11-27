@@ -35,6 +35,7 @@ exports.getQuestion = catchAsync( async (req, res, next) => {
 // @desc:        Create a question.
 // @access:      Private
 exports.createQuestion = catchAsync(async (req, res, next) => {
+  req.body.user = req.user._id;
   const question = await Question.create(req.body);
   res.status(201).json({ success: true, data: question });
 });
@@ -43,10 +44,16 @@ exports.createQuestion = catchAsync(async (req, res, next) => {
 // @desc:        Update a question.
 // @access:      Private
 exports.updateQuestion = catchAsync( async (req, res, next) => {
-    const question = await Question.findByIdAndUpdate(req.params.id, req.body, {
+  let question = await Question.findById(req.params.id);
+  
+  if (req.user._id !== question.user) {
+    return next(new AppError('You are not authorized', 401));
+  }
+    question = await Question.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
+
     if (!question) {
       return next(new AppError(`No Question found with id ${req.params.id}`, 404));
     }
@@ -57,7 +64,13 @@ exports.updateQuestion = catchAsync( async (req, res, next) => {
 // @desc:        Delete a question.
 // @access:      Private
 exports.deleteQuestion = catchAsync( async (req, res, next) => {
-    const question = await Question.findByIdAndDelete(req.params.id);
+  let question = await Question.findById(req.params.id);
+  
+  if (req.user._id !== question.user) {
+    return next(new AppError('You are not authorized', 401));
+  } 
+  
+  question = await Question.findByIdAndDelete(req.params.id);
     if (!question) {
       return next(new AppError(`No Question found with id ${req.params.id}`, 404));
     }

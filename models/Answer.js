@@ -12,6 +12,11 @@ const AnswerSchema = mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Question',
         required: [true, "Please add a question Id"]
+    },
+    user: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        required: [true, "Please add a user"]
     }
 });
 

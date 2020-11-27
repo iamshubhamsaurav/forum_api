@@ -43,6 +43,7 @@ exports.createAnswer = async (req, res, next) => {
     if (!question) {
         return next(new AppError(`No Question found with id of ${req.params.questionId}`, 404));
     }
+    req.body.user = req.user._id;
     req.body.questionId = req.params.questionId;
     const answer = await Answer.create(req.body);
     res.status(200).json({
@@ -57,7 +58,13 @@ exports.createAnswer = async (req, res, next) => {
 // @desc        : Update an answer
 // @access      : Private
 exports.updateAnswer = async (req, res, next) => {
-    const answer = await Answer.findByIdAndUpdate(req.params.id, req.body, {
+    let answer = await Answer.findById(req.params.id);
+
+    if (req.user._id !== answer.user) {
+        return next(new AppError('You are not authorized!', 401));
+    }
+    
+    answer = await Answer.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
     });
@@ -74,7 +81,14 @@ exports.updateAnswer = async (req, res, next) => {
 // @desc        : Delete an answer
 // @access      : Private
 exports.deleteAnswer = async (req, res, next) => {
-    const answer = await Answer.findByIdAndDelete(req.params.id);
+    let answer = await Answer.findById(req.params.id);
+
+    if (req.user._id !== answer.user) {
+        return next(new AppError('You are not authorized!', 401));
+    }
+
+    answer = await Answer.findByIdAndDelete(req.params.id);
+    
     if (!answer) {
         return next(new AppError(`Answer not found with the id of ${req.params.id}`, 404));
     }
