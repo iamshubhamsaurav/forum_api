@@ -14,16 +14,21 @@ const CommentSchema = mongoose.Schema({
         type: Date,
         default: Date.now(),
         required: [true, "Please add a update date of the comment"],
-    }, 
-    replyTo: {
+    },
+    answer: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Comment',
+        ref: 'Answer',
+        required: [true, "Please add an answer"],
     },
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: [true, "Please add a user"],
-    }
+    },
+    replyTo: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Comment',
+    },
 });
 
 module.exports = mongoose.model('Comment', CommentSchema);
