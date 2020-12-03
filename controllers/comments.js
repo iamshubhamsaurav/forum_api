@@ -5,7 +5,7 @@ const AppError = require('../utils/apiError');
 // @route:       GET /api/v1/answers/:answerId/comments/
 // @desc:        Create a comment.
 // @access:      Public
-const getCommentsByAnswer = catchAsync(async (req, res, next) => {
+exports.getCommentsByAnswer = catchAsync(async (req, res, next) => {
     const comments = await Comment.find({answer: req.params.answerId});
     res.status(200).json({
         success: true,
@@ -17,7 +17,7 @@ const getCommentsByAnswer = catchAsync(async (req, res, next) => {
 // @route:       GET /api/v1/comments/:id
 // @desc:        Get a comment.
 // @access:      Public
-const getComment = catchAsync(async (req, res, next) => {
+exports.getComment = catchAsync(async (req, res, next) => {
     const comment = await Comment.findById(req.params.id);
     if(!comment) {
         return next(new AppError(`No Comment found with the id of ${req.params.id}`, 404));
@@ -31,7 +31,7 @@ const getComment = catchAsync(async (req, res, next) => {
 // @route:       POST /api/v1/answers/:answerId/comments/
 // @desc:        Create a comment.
 // @access:      Private
-const createComment = catchAsync(async (req, res, next) => {
+exports.createComment = catchAsync(async (req, res, next) => {
     if(!req.body.answer) {
         return next(new AppError('Comment must have an answer', 400));
     }
@@ -46,7 +46,7 @@ const createComment = catchAsync(async (req, res, next) => {
 // @route:       PATCH /api/v1/comments/:id
 // @desc:        Update a comment.
 // @access:      Private
-const updateComment = catchAsync(async (req, res, next) => {
+exports.updateComment = catchAsync(async (req, res, next) => {
     if (req.body.answer) {
         return next(new AppError('You cannot change the answer propetry', 400));
     }
@@ -70,7 +70,7 @@ const updateComment = catchAsync(async (req, res, next) => {
 // @route:       DELETE /api/v1/comments/:id
 // @desc:        Delete a comment.
 // @access:      Private
-const deleteComment = catchAsync(async (req, res, next) => {
+exports.deleteComment = catchAsync(async (req, res, next) => {
     const comment = await Comment.findById(req.params.id);
     if (!comment) {
         return next(new AppError(`No Comment found with id ${req.params.id}`, 404));

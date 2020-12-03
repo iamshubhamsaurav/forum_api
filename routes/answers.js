@@ -5,6 +5,10 @@ const answerController = require('../controllers/answers');
 
 const router = express.Router({mergeParams: true});
 
+const commentRoute = require('../routes/comments');
+
+router.use('/:answerId/comments', commentRoute);
+
 router.route('/')
     .get(answerController.getAnswersByQuestion)
     .post(authController.protect, answerController.createAnswer);
