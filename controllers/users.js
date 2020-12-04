@@ -40,7 +40,7 @@ exports.updateUser = catchAsync(async (req, res, next) =>  {
         runValidators: true,
     });
     if (!user) {
-        return next(new AppError(`No USE found with id ${req.params.id}`, 404));
+        return next(new AppError(`No User found with id ${req.params.id}`, 404));
     }
     res.status(200).json({
         success: true,
